@@ -4,38 +4,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.security.Key;
 
 public class Model extends JPanel implements ActionListener {
     private Dimension dimension;
-    private final int blockSize=34;
-    private final int blockNumber=18;
+    private final int blockSize=24;
+    private final int blockNumber=15;
     private final int screenSize= blockSize*blockNumber;
     private int currentSpeed=3;
-    private boolean alive = false;
-    private boolean dead = false;
+
     private final int MAX_GHOSTS=12;
     private  int[] screenData;
     private final int LevelData[]={
 
-            19,26,18,26,22,0 ,0 ,0 ,0 ,0 ,19,18,26,26,26,26,26,22,
-            21,0 ,21,0 ,17,26,26,18,26,26,16,20,0 ,0 ,0 ,0 ,0 ,21,
-            21,0 ,21,0 ,21,0 ,0 ,21,0 ,0 ,17,16,26,26,26,30,0 ,21,
-            21,0 ,21,0 ,21,0 ,19,16,22,0 ,17,20,0 ,0 ,0 ,0 ,0 ,21,
-            17,26,24,26,28,0 ,17,16,20,0 ,25,24,26,26,26,26,26,20,
-            21,0 ,0 ,0 ,0 ,0 ,17,16,20,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,21,
-            21,0 ,27,26,26,18,24,24,16,26,26,18,26,26,26,30,0 ,21,
-            21,0 ,0 ,0 ,0 ,21,0 ,0 ,21,0 ,0 ,21,0 ,0 ,0 ,0 ,0 ,21,
-            17,26,26,26,26,20,0 ,27,24,30,0 ,17,18,26,18,18,18,28,
-            21,0 ,0 ,0 ,0 ,21,0 ,0 ,0 ,0 ,0 ,17,28,0 ,17,24,28,0 ,
-            21,0 ,27,26,26,16,26,26,26,26,26,20,0 ,0 ,21,0 ,0 ,0 ,
-            21,0 ,0 ,0 ,0 ,21,0 ,0 ,0 ,0 ,0 ,17,26,18,16,26,26,22,
-            17,26,18,26,18,20,0 ,23,0 ,23,0 ,21,0 ,17,20,0 ,0 ,21,
-            21,0 ,21,0 ,25,20,0 ,17,18,20,0 ,21,0 ,17,24,30,0 ,21,
-            21,0 ,21,0 ,0 ,17,26,16,24,24,26,20,0 ,21,0 ,0 ,0 ,21,
-            29,0 ,17,26,26,28,0 ,21,0 ,0 ,0 ,17,18,16,26,26,18,28,
-            0 ,0 ,21,0 ,0 ,0 ,0 ,17,26,26,26,24,24,20,0 ,0 ,21,0 ,
-            27,26,24,26,26,26,26,28,0 ,0 ,0 ,0 ,0 ,25,26,26,28,0
+        19, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 22,
+        17, 16, 16, 16, 16, 24, 16, 16, 16, 16, 16, 16, 16, 16, 20,
+        25, 24, 24, 24, 28, 0, 17, 16, 16, 16, 16, 16, 16, 16, 20,
+        0,  0,  0,  0,  0,  0, 17, 16, 16, 16, 16, 16, 16, 16, 20,
+        19, 18, 18, 18, 18, 18, 16, 16, 16, 16, 24, 24, 24, 24, 20,
+        17, 16, 16, 16, 16, 16, 16, 16, 16, 20, 0,  0,  0,   0, 21,
+        17, 16, 16, 16, 16, 16, 16, 16, 16, 20, 0,  0,  0,   0, 21,
+        17, 16, 16, 16, 24, 16, 16, 16, 16, 20, 0,  0,  0,   0, 21,
+        17, 16, 16, 20, 0, 17, 16, 16, 16, 16, 18, 18, 18, 18, 20,
+        17, 24, 24, 28, 0, 25, 24, 24, 16, 16, 16, 16, 16, 16, 20,
+        21, 0,  0,  0,  0,  0,  0,   0, 17, 16, 16, 16, 16, 16, 20,
+        17, 18, 18, 22, 0, 19, 18, 18, 16, 16, 16, 16, 16, 16, 20,
+        17, 16, 16, 20, 0, 17, 16, 16, 16, 16, 16, 16, 16, 16, 20,
+        17, 16, 16, 20, 0, 17, 16, 16, 16, 16, 16, 16, 16, 16, 20,
+        25, 24, 24, 24, 26, 24, 24, 24, 24, 24, 24, 24, 24, 24, 28
 
     };
     public Model(){
@@ -62,7 +57,8 @@ public class Model extends JPanel implements ActionListener {
         }
     }
     public void intoGame(){
-        live=3; score=0;
+        live=3;
+        score=0;
         level();
         ghostNumber=6;
         currentSpeed=3;
@@ -71,8 +67,8 @@ public class Model extends JPanel implements ActionListener {
         if (dying) {
             death();
         } else {
-            drawPacman(g);
             movePacman();
+            drawPacman(g);
             moveGhost(g);
             checkMap();
         }
@@ -104,12 +100,12 @@ public class Model extends JPanel implements ActionListener {
     }
     private Image turnDown, turnUp, turnRight, turnLeft, Pacman, lives, ghost;
     private void loadImg(){
-        turnDown = new ImageIcon("/src/Images/down.gif").getImage();
-        turnUp = new ImageIcon("/src/Images/up.gif").getImage();
-        turnLeft = new ImageIcon("/src/Images/left.gif").getImage();
-        turnRight = new ImageIcon("/src/Images/right.gif").getImage();
-        ghost = new ImageIcon("/src/Images/ghost.gif").getImage();
-        lives = new ImageIcon("/src/Images/heart.png").getImage();
+        turnDown = new ImageIcon("D:\\Pacman/down.gif").getImage();
+        turnUp = new ImageIcon("D:\\Pacman/up.gif").getImage();
+        turnLeft = new ImageIcon("D:\\Pacman/left.gif").getImage();
+        turnRight = new ImageIcon("D:\\Pacman/right.gif").getImage();
+        ghost = new ImageIcon("D:\\Pacman/ghost.gif").getImage();
+        lives = new ImageIcon("D:\\Pacman/heart.png").getImage();
 
     }
     private Timer timer;
@@ -197,83 +193,88 @@ public class Model extends JPanel implements ActionListener {
         pacX = pacX + pacmanSpeed * pacdX;
         pacY = pacY + pacmanSpeed * pacdY;
     }
-    
+
     private int ghostNumber = 8;
     private int[] dx, dy, ghost_x, ghost_y, ghost_dx, ghost_dy, ghostSpeed;
-    
+
     private void drawGhost(Graphics2D g, int x, int y) {
     	g.drawImage(ghost, x, y, this);
     }
-    
-    public void moveGhost(Graphics2D g2d){
-        int position;
-        int count;
-        
-        for(int i=0; i<ghostNumber; i++){
-            if (ghost_x[i] % blockSize == 0 && ghost_y[i] % blockSize == 0) {
-                position = ghost_x[i] / blockSize + blockNumber * (int) (ghost_y[i] / blockSize);
-                count = 0;
-                
-                if ((screenData[position] & 1) == 0 && ghost_dx[i] != 1) {
-                    dx[count] = -1;
-                    dy[count] = 0;
-                    count++;
-                }
 
-                if ((screenData[position] & 2) == 0 && ghost_dy[i] != 1) {
-                    dx[count] = 0;
-                    dy[count] = -1;
-                    count++;
-                }
+    public void moveGhost(Graphics2D g2d) {
+    int position;
+    int count;
 
-                if ((screenData[position] & 4) == 0 && ghost_dx[i] != -1) {
-                    dx[count] = 1;
-                    dy[count] = 0;
-                    count++;
-                }
+    for (int i = 0; i < ghostNumber; i++) {
+        if (ghost_x[i] % blockSize == 0 && ghost_y[i] % blockSize == 0) {
+            position = ghost_x[i] / blockSize + blockNumber * (int) (ghost_y[i] / blockSize);
+            count = 0;
 
-                if ((screenData[position] & 8) == 0 && ghost_dy[i] != -1) {
-                    dx[count] = 0;
-                    dy[count] = 1;
-                    count++;
-                }
-                
-                if (count == 0) {
+            if ((screenData[position] & 1) == 0 && ghost_dx[i] != 1) {
+                dx[count] = -1;
+                dy[count] = 0;
+                count++;
+            }
 
-                    if ((screenData[position] & 15) == 15) {
-                        ghost_dx[i] = 0;
-                        ghost_dy[i] = 0;
-                    } else {
-                        ghost_dx[i] = -ghost_dx[i];
-                        ghost_dy[i] = -ghost_dy[i];
-                    }
+            if ((screenData[position] & 2) == 0 && ghost_dy[i] != 1) {
+                dx[count] = 0;
+                dy[count] = -1;
+                count++;
+            }
 
+            if ((screenData[position] & 4) == 0 && ghost_dx[i] != -1) {
+                dx[count] = 1;
+                dy[count] = 0;
+                count++;
+            }
+
+            if ((screenData[position] & 8) == 0 && ghost_dy[i] != -1) {
+                dx[count] = 0;
+                dy[count] = 1;
+                count++;
+            }
+
+            if (count == 0) {
+                if ((screenData[position] & 15) == 15) {
+                    ghost_dx[i] = 0;
+                    ghost_dy[i] = 0;
                 } else {
-
-                    count = (int) (Math.random() * count);
-
-                    if (count > 3) {
-                        count = 3;
-                    }
-
-                    ghost_dx[i] = dx[count];
-                    ghost_dy[i] = dy[count];
+                    ghost_dx[i] = -ghost_dx[i];
+                    ghost_dy[i] = -ghost_dy[i];
                 }
-            }
-            ghost_x[i] = ghost_x[i] + (ghost_dx[i] * ghostSpeed[i]);
-            ghost_y[i] = ghost_y[i] + (ghost_dy[i] * ghostSpeed[i]);
-            drawGhost(g2d, ghost_x[i] + 1, ghost_y[i] + 1);
+            } else {
+                count = (int) (Math.random() * count);
 
-            if (pacX > (ghost_x[i] - 12) && pacX < (ghost_x[i] + 12)
-                    && pacY > (ghost_y[i] - 12) && pacY < (ghost_y[i] + 12)
-                    && alive) {
+                if (count > 3) {
+                    count = 3;
+                }
 
-                dead = true;
+                ghost_dx[i] = dx[count];
+                ghost_dy[i] = dy[count];
             }
-        } 
+        }
+
+        // Update ghost positions after bounds check
+        int newGhostX = ghost_x[i] + (ghost_dx[i] * ghostSpeed[i]);
+        int newGhostY = ghost_y[i] + (ghost_dy[i] * ghostSpeed[i]);
+
+        // Check bounds before updating ghost positions
+        if (newGhostX >= 0 && newGhostX < screenSize - blockSize &&
+            newGhostY >= 0 && newGhostY < screenSize - blockSize) {
+            ghost_x[i] = newGhostX;
+            ghost_y[i] = newGhostY;
+        }
+
+        drawGhost(g2d, ghost_x[i] + 1, ghost_y[i] + 1);
+
+        if (pacX > (ghost_x[i] - 12) && pacX < (ghost_x[i] + 12) &&
+            pacY > (ghost_y[i] - 12) && pacY < (ghost_y[i] + 12) && inGame) {
+            dying = true;
+        }
     }
-    
-    
+}
+
+
     public void drawMap(Graphics2D g){
         int i=0, x, y;
         for(y=0; y<screenSize; y+=blockSize){
@@ -281,7 +282,7 @@ public class Model extends JPanel implements ActionListener {
                 g.setColor(new Color(0,72,251));
                 g.setStroke(new BasicStroke(5));
 
-                if(screenData[i]==0){
+                if(LevelData[i]==0){
                     g.fillRect(x,y,blockSize,blockSize);
                 }
                 if((screenData[i]&1)!=0){
@@ -333,6 +334,8 @@ public class Model extends JPanel implements ActionListener {
         pacY= 11*blockSize;
         pacdX=0;
         pacdY=0;
+        xTurn = 0;
+        yTurn = 0;
         dying=false;
     }
     private boolean inGame=false;
@@ -352,14 +355,19 @@ public class Model extends JPanel implements ActionListener {
                 }
                 else if(key== KeyEvent.VK_UP){
                     xTurn=0;
-                    yTurn=1;
+                    yTurn=-1;
                 }
                 else if(key== KeyEvent.VK_DOWN){
                    xTurn=0;
-                   yTurn=-1;
+                   yTurn=1;
                 }
                 else if(key== KeyEvent.VK_ESCAPE && timer.isRunning()){
                     inGame= false;
+                }
+            }else {
+                if (key == KeyEvent.VK_SPACE) {
+                    inGame = true;
+                    intoGame();
                 }
             }
         }
