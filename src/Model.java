@@ -4,9 +4,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 public class Model extends JPanel implements ActionListener {
     private Dimension dimension;
+    private String playerName;
+    private int highScore;
+    private Pacman parentFrame;
     private final int blockSize=24;
     private final int blockNumber=15;
     private final int screenSize= blockSize*blockNumber;
@@ -33,12 +41,39 @@ public class Model extends JPanel implements ActionListener {
         25, 24, 24, 24, 26, 24, 24, 24, 24, 24, 24, 24, 24, 24, 28
 
     };
-    public Model(){
+    public  Model(String playerName, Pacman parentFrame) {
+        this.playerName = playerName;
+        this.parentFrame = parentFrame;
+        loadHighScore();
         loadImg();
         inGameVariables();
         addKeyListener(new Adapter());
         setFocusable(true);
         intoGame();
+    }
+    private void loadHighScore() {
+        try (Scanner scanner = new Scanner(new File("highscore.txt"))) {
+            if (scanner.hasNextInt()) {
+                highScore = scanner.nextInt();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveHighScore() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("highscore.txt"))) {
+            writer.println(highScore);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateHighScore() {
+        if (score > highScore) {
+            highScore = score;
+            saveHighScore();
+        }
     }
     public void showIntro(Graphics2D g){
         String s= "Press Space to Start";
@@ -97,6 +132,8 @@ public class Model extends JPanel implements ActionListener {
             inGame=false;
         }
         levelContinue();
+        updateHighScore();
+
     }
     private Image turnDown, turnUp, turnRight, turnLeft, Pacman, lives, ghost;
     private void loadImg(){
@@ -139,8 +176,11 @@ public class Model extends JPanel implements ActionListener {
         else{
             showIntro(g2d);
         }
+
         Toolkit.getDefaultToolkit().sync();
         g2d.dispose();
+        g.setColor(Color.white);
+        g.drawString("High Score: " + highScore, 10, screenSize + 32);
     }
     private int xTurn, yTurn, pacX, pacY, pacdX, pacdY, score;
     private final int pacmanSpeed = 6;
